@@ -1,5 +1,5 @@
 import ReactPlayer from "react-player";
-
+import { FacebookButton, FacebookCount } from "react-social";
 import Layout from "../../components/Layout";
 // import Head from "next/head";
 import Image from "next/image";
@@ -18,10 +18,11 @@ import {
 const TendenciasId = ({ results }) => {
   console.log(results);
 
-  const shareUrl = `https://prueba-ashy-seven.vercel.app/tendencia/${results.items[0].snippet.resourceId.videoId}`;
-  const shareUrlImage = `https://i.ytimg.com/vi/${results.items[0].snippet.resourceId.videoId}/maxresdefault.jpg`;
+  const shareUrl = `https://prueba-ashy-seven.vercel.app/tendencia/${results.items[0].id}`;
+
+  // const shareUrlImage = `${results.items[0].snippet.thumbnails.high.url}/maxresdefault.jpg`;
   console.log(shareUrl);
-  console.log(shareUrlImage);
+  // console.log(shareUrlImage);
   // https://i.ytimg.com/vi/5o7eugksfo8/maxresdefault.jpg
   return (
     <>
@@ -29,7 +30,7 @@ const TendenciasId = ({ results }) => {
         title={results.items[0].snippet.title + " | SerpelFlow"}
         description="Serpelfow, Lo último en Noticias, Fotos, Videos y Música de
         los artistas de Reggaeton, Trap y Urbano."
-        image={results.items[0].snippet.thumbnails.medium.url}
+        image={results.items[0].snippet.thumbnails.maxres.url}
       ></Layout>
       {/* <Head>
         <meta
@@ -42,15 +43,19 @@ const TendenciasId = ({ results }) => {
           <h1>
             {results.items[0].snippet.title}
             <br></br>
-            {results.items[0].snippet.position} en tendencias
+            Posicion {results.items[0].snippet.position} en tendencias
           </h1>
 
           <div>
+            <FacebookButton url={shareUrl} appId={366457178537551}>
+              <FacebookCount url={shareUrl} />
+              {" Share " + shareUrl}
+            </FacebookButton>
             <FacebookShareButton
               className="float-end mx-1"
               title={"Facebook"}
               url={shareUrl}
-              image={shareUrlImage}
+              image={results.items[0].snippet.thumbnails.maxres.url}
               quote={results.items[0].snippet.title}
               hashtag={"#reggaeton"}
             >
@@ -60,7 +65,7 @@ const TendenciasId = ({ results }) => {
             <WhatsappShareButton
               className="float-end mx-1"
               url={shareUrl}
-              image={results.items[0].snippet.thumbnails.medium.url}
+              image={results.items[0].snippet.thumbnails.maxres.url}
               title={"WhatsApp"}
               separator=": "
             >
@@ -70,7 +75,7 @@ const TendenciasId = ({ results }) => {
               className="img-fluid rounded-start "
               height={70}
               width={100}
-              src={results.items[0].snippet.thumbnails.medium.url}
+              src={results.items[0].snippet.thumbnails.maxres.url}
               objectFit="fill"
               alt="foto referencia"
               priority
@@ -78,7 +83,7 @@ const TendenciasId = ({ results }) => {
             <FacebookMessengerShareButton
               className="float-end mx-1"
               url={shareUrl}
-              image={results.items[0].snippet.thumbnails.medium.url}
+              image={results.items[0].snippet.thumbnails.maxres.url}
               appId="366457178537551"
             >
               <FacebookMessengerIcon size={40} round={true} />
@@ -88,7 +93,7 @@ const TendenciasId = ({ results }) => {
               className="float-end mx-1"
               title={"Serpelflow"}
               url={shareUrl}
-              image={results.items[0].snippet.thumbnails.medium.url}
+              image={results.items[0].snippet.thumbnails.maxres.url}
               quote={results.items[0].snippet.title}
               hashtag={"#reggaeton"}
             >
@@ -99,7 +104,7 @@ const TendenciasId = ({ results }) => {
           <div className="player-wrapper mb-4 container-fluid float-start col-12 col-lg-12 col-md-12 col-xl-6 px-0 mx-auto ">
             <ReactPlayer
               controls
-              url={`https://www.youtube.com/watch?v=${results.items[0].snippet.resourceId.videoId}`}
+              url={`https://www.youtube.com/watch?v=${results.items[0].id}`}
             />
           </div>
           <div className="container mt-0 mb-4 col-md-12 col-lg-6  d-flex justify-content-center  mx-auto"></div>
@@ -132,7 +137,8 @@ export async function getServerSideProps(params) {
     const { id } = params.query;
     const MY_PLAYLIST = process.env.YOUTUBE_PLAYLIST_ID;
     const API_KEY = process.env.YOUTUBE_API_KEY;
-    const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&videoId=${id}&key=${API_KEY}`;
+    // const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&videoId=${id}&key=${API_KEY}`;
+    const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${API_KEY}`;
     const response = await fetch(REQUEST_URL);
     const results = await response.json();
     console.log(results);
