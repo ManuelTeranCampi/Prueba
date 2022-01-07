@@ -1,9 +1,41 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import CardTendenciaYoutube from "../components/CardTendenciaYoutube";
-const Home = ({ results }) => {
-  console.log(results);
+import { PrismaClient } from "@prisma/client";
+import safeJsonStringify from "safe-json-stringify";
+const prisma = new PrismaClient();
+
+export async function getServerSideProps() {
+  const post = await prisma.post.findMany({
+    where: {
+      categoria: { nombre_categoria: "interesar" },
+    },
+    include: {
+      usuario: true,
+      categoria: true,
+    },
+  });
+
+  const entrevista = await prisma.post.findMany({
+    where: {
+      categoria: { nombre_categoria: "entrevista" },
+    },
+    include: {
+      usuario: true,
+      categoria: true,
+    },
+  });
+  return {
+    props: {
+      post: JSON.parse(safeJsonStringify(post)),
+      entrevista: JSON.parse(safeJsonStringify(entrevista)),
+    },
+  };
+}
+
+const Home = ({ post, entrevista }) => {
+  console.log(post);
+  console.log(entrevista);
   return (
     <div className={styles.container}>
       <Head>
@@ -13,13 +45,130 @@ const Home = ({ results }) => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+        <h1>Titulo Interesar</h1>
         <div>
-          {results &&
-            results.slice(0).map((video, videoid) => {
-              return <CardTendenciaYoutube video={video} key={videoid} />;
+          {post &&
+            post.map((p) => {
+              return (
+                <div key={p.id}>
+                  <div className="container">
+                    <h2>
+                      Nombre: <b>{p.nombre_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Tipo: <b>{p.tipo_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Imagen: <b>{p.url_post_img}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Descripcion: <b>{p.description_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Enlace: <b>{p.enlace_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Canal: <b>{p.enlace_canal_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Fecha: <b>{p.fecha_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Publicado por: <b>{p.usuario.nombre_usuario}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Categoria: <b>{p.categoria.nombre_categoria}</b>
+                    </h2>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+        <h1>Titulo Entrevista</h1>
+        <div className="card">
+          {entrevista &&
+            entrevista.map((e) => {
+              return (
+                <div key={e.id}>
+                  <div className="container">
+                    <h2>
+                      Nombre: <b>{e.nombre_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Tipo: <b>{e.tipo_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Imagen: <b>{e.url_post_img}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Descripcion: <b>{e.description_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Enlace: <b>{e.enlace_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Canal: <b>{e.enlace_canal_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Fecha: <b>{e.fecha_post}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Publicado por: <b>{e.usuario.nombre_usuario}</b>
+                    </h2>
+                  </div>
+
+                  <div className="container">
+                    <h2>
+                      Categoria: <b>{e.categoria.nombre_categoria}</b>
+                    </h2>
+                  </div>
+                </div>
+              );
             })}
         </div>
       </main>
@@ -28,29 +177,21 @@ const Home = ({ results }) => {
 };
 export default Home;
 
-export async function getServerSideProps() {
-  try {
-    const MY_PLAYLIST = process.env.YOUTUBE_PLAYLIST_ID;
-    const API_KEY = process.env.YOUTUBE_API_KEY;
-    const REQUEST_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&key=${API_KEY}&maxResults=6`;
-    const response = await fetch(REQUEST_URL);
-    const results = await response.json();
-    // console.log(results);
+// export async function getServerSideProps() {
+//   try {
+//     const MY_PLAYLIST = process.env.YOUTUBE_PLAYLIST_ID;
+//     const API_KEY = process.env.YOUTUBE_API_KEY;
+//     const REQUEST_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&key=${API_KEY}&maxResults=6`;
+//     const response = await fetch(REQUEST_URL);
+//     const results = await response.json();
 
-    // const MY_PLAYLIST_ESTRENO = process.env.YOUTUBE_PLAYLIST_ID_ESTRENO;
-    // const API_KEY_ESTRENO = process.env.YOUTUBE_API_KEY;
-    // const REQUEST_URL_ESTRENO = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST_ESTRENO}&key=${API_KEY_ESTRENO}&maxResults=50`;
-    // const responseEstreno = await fetch(REQUEST_URL_ESTRENO);
-    // const resultsEstreno = await responseEstreno.json();
-    // console.log(resultsEstreno);
+//     return {
+//       props: {
+//         results: results.items,
+//       },
+//     };
+//   } catch (error) {
 
-    return {
-      props: {
-        results: results.items,
-      },
-    };
-  } catch (error) {
-    // console.log(error);
-    return { props: { success: false, error: "Error!" } };
-  }
-}
+//     return { props: { success: false, error: "Error!" } };
+//   }
+// }

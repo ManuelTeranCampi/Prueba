@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// model Tiradera {
+//   id                String             @id @default(cuid())
+//   nombre_post       String
+//   categoria_post    String
+//   tipo_post         String
+//   url_post_img      String
+//   description_post  String
+//   enlace_post       String
+//   enlace_canal_post String
+//   fecha_post        DateTime
+//   usuario     Usuario? @relation(fields: [usuarioId], references: [id])
+//   usuarioId String?
+// }
+// model Estreno {
+//   id                String             @id @default(cuid())
+//   nombre_post       String
+//   categoria_post    String
+//   tipo_post         String
+//   url_post_img      String
+//   description_post  String
+//   enlace_post       String
+//   enlace_canal_post String
+//   fecha_post        DateTime
+//   usuario     Usuario? @relation(fields: [usuarioId], references: [id])
+//   usuarioId String?
+// }
+
+
+// model Usuario {
+//   id               String @id @default(cuid())
+//   nombre_usuario   String
+//   correo_usuario   String @unique
+//   password_usuario String
+//  tiradera     Tiradera[]
+//  estreno     Estreno[]
+
+// }
+
+// model Categoria {
+//   id            String             @id @default(cuid())
+//   nombre_categoria String
+//   post      Post @relation(fields: [postId], references: [id])
+//   postId String
+//   tipo    Tipo[]
+// }
+
+// model Tipo {
+//   id       String        @id @default(cuid())
+//   nombre_tipo String
+//   categoria     Categoria @relation(fields: [categoriaId], references: [id])
+//   categoriaId String
+//     usuario     Usuario @relation(fields: [usuarioId], references: [id])
+//   usuarioId String
+// }
+
+
+// model Perfil {
+//   id                String        @id @default(cuid())
+//   nombre_perfil     String
+//   usuario   Usuario @relation(fields: [usuarioId], references: [id])
+//   usuarioId         String // relation scalar field (used in the `@relation` attribute above)
+// }
+
+model Usuario {
+id                 String        @id @default(cuid())
+  nombre_usuario   String
+  correo_usuario   String @unique
+  password_usuario String
+  post             Post[]
+}
+model Post {
+  id                String        @id @default(cuid())
+  nombre_post       String
+  tipo_post         String
+  url_post_img      String
+  description_post  String
+  enlace_post       String
+  enlace_canal_post String
+  fecha_post        DateTime
+  usuario           Usuario?       @relation(fields: [usuarioId], references: [id])
+  usuarioId        String? // relation scalar field  (used in the `@relation` attribute above)
+  categoria        Categoria?  @relation(fields: [categoriaId], references: [id])
+  categoriaId        String?
+}
+
+model Categoria {
+  id               String        @id @default(cuid())
+  nombre_categoria String
+  post             Post[]
+}
+
+
+

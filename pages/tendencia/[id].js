@@ -18,12 +18,14 @@ import {
 const TendenciasId = ({ results }) => {
   console.log(results);
 
-  const shareUrl = `https://prueba-ashy-seven.vercel.app/tendencia/${results.items[0].id}`;
+  const shareUrl = `https://prueba-ashy-seven.vercel.app/tendencia/${results.items[0].snippet.resourceId.videoId}`;
 
   // const shareUrlImage = `${results.items[0].snippet.thumbnails.high.url}/maxresdefault.jpg`;
   console.log(shareUrl);
   // console.log(shareUrlImage);
   // https://i.ytimg.com/vi/5o7eugksfo8/maxresdefault.jpg
+  const typesitio = "website";
+  const app_id_face = "366457178537551";
   return (
     <>
       <Layout
@@ -31,6 +33,9 @@ const TendenciasId = ({ results }) => {
         description="Serpelfow, Lo último en Noticias, Fotos, Videos y Música de
         los artistas de Reggaeton, Trap y Urbano."
         image={results.items[0].snippet.thumbnails.maxres.url}
+        url={`https://prueba-ashy-seven.vercel.app/tendencia/${results.items[0].snippet.resourceId.videoId}`}
+        app_id={app_id_face}
+        type={typesitio}
       ></Layout>
       {/* <Head>
         <meta
@@ -47,10 +52,6 @@ const TendenciasId = ({ results }) => {
           </h1>
 
           <div>
-            <FacebookButton url={shareUrl} appId={366457178537551}>
-              <FacebookCount url={shareUrl} />
-              {" Share " + shareUrl}
-            </FacebookButton>
             <FacebookShareButton
               className="float-end mx-1"
               title={"Facebook"}
@@ -104,7 +105,7 @@ const TendenciasId = ({ results }) => {
           <div className="player-wrapper mb-4 container-fluid float-start col-12 col-lg-12 col-md-12 col-xl-6 px-0 mx-auto ">
             <ReactPlayer
               controls
-              url={`https://www.youtube.com/watch?v=${results.items[0].id}`}
+              url={`https://www.youtube.com/watch?v=${results.items[0].snippet.resourceId.videoId}`}
             />
           </div>
           <div className="container mt-0 mb-4 col-md-12 col-lg-6  d-flex justify-content-center  mx-auto"></div>
@@ -137,8 +138,8 @@ export async function getServerSideProps(params) {
     const { id } = params.query;
     const MY_PLAYLIST = process.env.YOUTUBE_PLAYLIST_ID;
     const API_KEY = process.env.YOUTUBE_API_KEY;
-    // const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&videoId=${id}&key=${API_KEY}`;
-    const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${API_KEY}`;
+    const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${MY_PLAYLIST}&videoId=${id}&key=${API_KEY}`;
+    // const REQUEST_URL = `https://youtube.googleapis.com/youtube/v3/videos?part=snippet&id=${id}&key=${API_KEY}`;
     const response = await fetch(REQUEST_URL);
     const results = await response.json();
     console.log(results);

@@ -17,8 +17,8 @@ const CardTendenciaYoutube = ({ video: { id, title, snippet } }) => {
                   className="img-fluid rounded-start "
                   height={70}
                   width={100}
-                  src={snippet.thumbnails.medium.url}
-                  objectFit="fill"
+                  src={snippet.thumbnails.high.url}
+                  // objectFit="fill"
                   alt="foto referencia"
                   //   layout="responsive"
                   priority

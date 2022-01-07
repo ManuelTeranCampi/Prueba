@@ -3,13 +3,15 @@ import Image from "next/image";
 
 import Head from "next/head";
 
-const Layout = ({ title, description, image }) => {
+const Layout = ({ title, description, image, url, app_id, type }) => {
   return (
     // <>
     <Head>
-      <title>{title}</title>
-      {/* <link rel="shortcut icon" href="#"></link> */}
-      <meta name="description" content={description} />
+      <meta property="fb:app_id" content={app_id} />
+      <meta property="og:url" content={url} />
+      <meta property="og:type" content={type} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
     </Head>
     // </>
